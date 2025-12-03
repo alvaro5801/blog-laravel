@@ -104,6 +104,3 @@ A arquitetura do projeto foi estruturada para máxima manutenibilidade e aderên
 - [x] **CRUD de Comentários**
 - [x] **Soft Delete em Comentários** (Implementado via Migração)
 
----
-
-**Próximo Passo:** **Finalize o README.md** preenchendo as informações de contato e o link do seu vídeo de apresentação.
