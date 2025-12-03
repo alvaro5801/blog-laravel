@@ -34,8 +34,8 @@ A arquitetura do projeto foi estruturada para máxima manutenibilidade e aderên
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [SEU_LINK_DO_REPOSITORIO]
-    cd [NOME_DO_PROJETO]
+    git clone https://github.com/alvaro5801/blog-laravel.git
+    cd blog-laravel
     ```
 
 2.  **Configuração Inicial:**
