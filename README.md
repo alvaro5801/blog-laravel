@@ -1,59 +1,109 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Blog Laravel - Desafio Técnico
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Descrição
 
-## About Laravel
+Aplicação web desenvolvida em Laravel que consome a API DummyJSON para persistir, listar e permitir interações (Likes, Comentários) em posts de usuários, com foco em arquitetura limpa e boas práticas.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tecnologias Utilizadas
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Laravel 10.x+
+- MySQL (Docker)
+- PHP 8.2+
+- Tailwind CSS (para interface)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Arquitetura e Organização do Código (Diferencial)
 
-## Learning Laravel
+A arquitetura do projeto foi estruturada para máxima manutenibilidade e aderência aos padrões de mercado:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+* **Service Layer (ReactionService):** Lógica de negócio complexa (manipulação de Sessão e contadores de Likes/Dislikes) isolada do Controller.
+* **Single Responsibility Principle (SRP):** Separação de classes (`PostController`, `CommentController`, `UserController`).
+* **Query Scopes:** Lógica de filtragem avançada (Busca por título, Tag, Ordenação por Likes/Views) movida para o Model (`Post.php`).
+* **Autorização:** Implementação de um **Gate** no `AppServiceProvider` para gerenciar permissões de edição/exclusão de comentários, substituindo a lógica hardcoded.
+* **Componentização:** Uso do **PostCard Component** para eliminar a duplicação de HTML nas listagens.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Instalação
 
-## Laravel Sponsors
+### Pré-requisitos
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Docker** e **Docker Compose V2** (Para ambiente de banco de dados e servidor PHP)
+- **WSL2** ou ambiente Linux (Recomendado para melhor desempenho)
+- **PHP 8.2+** (Versão da imagem Docker)
+- **Node.js** e **npm** (Para gerenciar assets via Vite)
 
-### Premium Partners
+### Passos
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+1.  **Clone o repositório:**
+    ```bash
+    git clone [SEU_LINK_DO_REPOSITORIO]
+    cd [NOME_DO_PROJETO]
+    ```
 
-## Contributing
+2.  **Configuração Inicial:**
+    Crie o arquivo de variáveis de ambiente com base no exemplo:
+    ```bash
+    cp .env.example .env
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3.  **Subir os Containers (Infraestrutura):**
+    Este comando inicia o servidor PHP e o banco de dados MySQL no Docker:
+    ```bash
+    docker compose up -d
+    ```
 
-## Code of Conduct
+4.  **Instalar Dependências PHP e JS:**
+    Execute a instalação de pacotes PHP (Composer) e Node.js (npm) dentro do container:
+    ```bash
+    # Instalar dependências Composer (executado dentro do container PHP)
+    docker compose exec laravel.test composer install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    # Instalar dependências NPM (executado no host/WSL)
+    npm install
+    ```
 
-## Security Vulnerabilities
+5.  **Migrar e Popular o Banco de Dados:**
+    Este comando executa as Migrations e o Seeder, que **consome a API DummyJSON** e persiste os dados:
+    ```bash
+    # Execute DENTRO do container PHP para usar a rede Docker interna
+    docker compose exec laravel.test php artisan migrate:fresh --seed
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+6.  **Compilar e Ligar Assets (Frontend):**
+    Para uso em produção, compile os assets; para desenvolvimento, use o modo 'dev':
+    ```bash
+    # Para Produção (Cria a pasta public/build)
+    npm run build
+    
+    # Para Desenvolvimento (Manter rodando em segundo plano em outro terminal)
+    # npm run dev
+    ```
 
-## License
+7.  **Acesso à Aplicação:**
+    A aplicação estará acessível no seu navegador:
+    ```
+    http://localhost:8000
+    ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+**Ação Final:** Substitua os passos no seu `README.md` por esta versão detalhada, preencha os colchetes com os seus dados (`[Nome do Projeto]`, etc.), e garanta que o **link da apresentação** seja incluído.
+
+## Funcionalidades Implementadas
+
+### ✅ Checklist Final
+
+- [x] Código commitado no repositório Git
+- [ ] **README.md completo e bem estruturado** (Pendente de Inclusão do Link)
+- [x] Arquivo .gitignore adequado
+- [ ] **Link da apresentação incluído no README**
+- [x] Funcionalidades principais implementadas
+- [x] Aplicação testada e funcional (Migrações e Seeding OK)
+
+### 📊 Funcionalidades Diferenciais Entregues
+
+- [x] **Filtros Avançados (Query Scopes)** (Implementados por Título, Tag, Likes e Views)
+- [x] **CRUD de Comentários**
+- [x] **Soft Delete em Comentários** (Implementado via Migração)
+
+---
+
+**Próximo Passo:** **Finalize o README.md** preenchendo as informações de contato e o link do seu vídeo de apresentação.
