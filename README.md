@@ -30,58 +30,49 @@ A arquitetura do projeto foi estruturada para máxima manutenibilidade e aderên
 - **PHP 8.2+** (Versão da imagem Docker)
 - **Node.js** e **npm** (Para gerenciar assets via Vite)
 
-### Passos
+## Instalação e Execução (Docker)
 
-1.  **Clone o repositório:**
-    ```bash
+Siga este passo a passo para rodar o projeto usando Docker (Sail).
+
+### Pré-requisitos
+
+- *Docker Desktop* instalado e rodando.
+
+### Passo a Passo
+
+1.  *Clone o repositório:*
+    bash
     git clone https://github.com/alvaro5801/blog-laravel.git
     cd blog-laravel
-    ```
-
-2.  **Configuração Inicial:**
-    Crie o arquivo de variáveis de ambiente com base no exemplo:
-    ```bash
-    cp .env.example .env
-    ```
-
-3.  **Subir os Containers (Infraestrutura):**
-    Este comando inicia o servidor PHP e o banco de dados MySQL no Docker:
-    ```bash
-    docker compose up -d
-    ```
-
-4.  **Instalar Dependências PHP e JS:**
-    Execute a instalação de pacotes PHP (Composer) e Node.js (npm) dentro do container:
-    ```bash
-    # Instalar dependências Composer (executado dentro do container PHP)
-    docker compose exec laravel.test composer install
-
-    # Instalar dependências NPM (executado no host/WSL)
-    npm install
-    ```
-
-5.  **Migrar e Popular o Banco de Dados:**
-    Este comando executa as Migrations e o Seeder, que **consome a API DummyJSON** e persiste os dados:
-    ```bash
-    # Execute DENTRO do container PHP para usar a rede Docker interna
-    docker compose exec laravel.test php artisan migrate:fresh --seed
-    ```
-
-6.  **Compilar e Ligar Assets (Frontend):**
-    Para uso em produção, compile os assets; para desenvolvimento, use o modo 'dev':
-    ```bash
-    # Para Produção (Cria a pasta public/build)
-    npm run build
     
-    # Para Desenvolvimento (Manter rodando em segundo plano em outro terminal)
-    # npm run dev
-    ```
 
-7.  **Acesso à Aplicação:**
-    A aplicação estará acessível no seu navegador:
-    ```
-    http://localhost:8000
-    ```
+2.  *Configure o Ambiente:*
+    Se ainda não tiver o arquivo .env, crie-o:
+    bash
+    cp .env.example .env
+    
+    Certifique-se de que DB_CONNECTION=mysql e DB_HOST=mysql estejam definidos.
+
+3.  *Inicie os Containers:*
+    Este comando baixa as imagens e inicia o servidor Laravel e o MySQL.
+    bash
+    ./vendor/bin/sail up -d
+    
+
+4.  *Prepare o Banco de Dados:*
+    Execute as migrações e o seeder dentro do container:
+    bash
+    ./vendor/bin/sail artisan migrate:fresh --seed
+    
+
+5.  *Instale Dependências de Frontend:*
+    bash
+    npm install
+    npm run dev
+    
+
+6.  *Acesse:*
+    Abra seu navegador em: [http://localhost](http://localhost)
 
 ---
 
