@@ -4,6 +4,9 @@
 
 Aplicação web desenvolvida em Laravel que consome a API DummyJSON para persistir, listar e permitir interações (Likes, Comentários) em posts de usuários, com foco em arquitetura limpa e boas práticas.
 
+##Apresentação:
+https://youtu.be/qsui_MEBHAA
+
 ## Tecnologias Utilizadas
 
 - Laravel 10.x+
@@ -72,7 +75,7 @@ Siga este passo a passo para rodar o projeto usando Docker (Sail).
     
 
 6.  *Acesse:*
-    Abra seu navegador em: [http://localhost](http://localhost)
+    Abra seu navegador em: http://localhost
 
 ---
 
@@ -83,9 +86,9 @@ Siga este passo a passo para rodar o projeto usando Docker (Sail).
 ### ✅ Checklist Final
 
 - [x] Código commitado no repositório Git
-- [ ] **README.md completo e bem estruturado** (Pendente de Inclusão do Link)
+- [x] **README.md completo e bem estruturado** (Pendente de Inclusão do Link)
 - [x] Arquivo .gitignore adequado
-- [ ] **Link da apresentação incluído no README**
+- [x] **Link da apresentação incluído no README**
 - [x] Funcionalidades principais implementadas
 - [x] Aplicação testada e funcional (Migrações e Seeding OK)
 
